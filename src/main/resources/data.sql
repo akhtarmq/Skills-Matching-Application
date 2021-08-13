@@ -1,0 +1,1 @@
+ --INSERT INTO USER VALUES (123, 'joe@mail.com', '123', 'admin', 'qwertyuio')

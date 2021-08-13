@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-light navbar-secondary fixed-top">
+    <ul class="navbar-nav nav nav-pills" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" href="/hm" >Current Jobs</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/newJobSpec" class="nav-link active" >New Job Spec</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/logout" class="nav-link" >Logout</a>
+        </li>
+    </ul>
+</nav>
+
+<header th:text="${jobSpecID}" style="margin-top:80px"></header>
+
+<div class="container p-3 my-3 border">
+    <table class="table table-responsive-sm table-light">
+        <caption></caption>
+        <thead class="thead-light">
+        <tr>
+            <th>Username</th>
+            <th>Rank</th>
+            <th>Select</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user: ${users}">
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.rank}"></td>
+            <td>
+                <form method="POST" th:action="selectCandidate">
+                    <input type="hidden" name="username" th:value="${user.username}"/>
+                    <input type="hidden" name="jobSpecID" th:value="${jobSpecID}"/>
+                    <input type="submit" class="btn btn-primary" value="select"/>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

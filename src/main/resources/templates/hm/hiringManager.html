@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hiring Manager</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-light navbar-secondary fixed-top">
+    <ul class="navbar-nav nav nav-pills" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" href="/hm" >Current Jobs</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/newJobSpec" class="nav-link" >New Job Spec</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/logout" class="nav-link" >Logout</a>
+        </li>
+    </ul>
+</nav>
+
+<br>
+<br>
+<div th:each="jobSpec: ${jobSpecs}" class="container" style="margin-top:80px">
+    <div class="form-group">
+        <a th:href="@{/jobSpec/{id}(id=${jobSpec.jobSpecID})}" class="btn btn-primary" th:text="${jobSpec.jobSpecName}"></a>
+    </div>
+    <div class="form-group">
+        <a th:href="@{/matchedCandidates/{id}(id=${jobSpec.jobSpecID})}" class="btn btn-primary">View Matches</a>
+    </div>
+</div>
+</body>
+</html>

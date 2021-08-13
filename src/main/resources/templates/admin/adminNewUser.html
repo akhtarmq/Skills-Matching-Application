@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Admin New User</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-light navbar-secondary fixed-top">
+
+  <ul class="navbar-nav nav nav-pills" role="tablist">
+    <li class="nav-item">
+      <a href="/admin" class="nav-link">View Users</a>
+    </li>
+    <li class="nav-item">
+      <a href="/adminNewUser" class="nav-link active">Add User</a>
+    </li>
+    <li class="nav-item">
+      <a href="/logout" class="nav-link">Log out</a>
+    </li>
+  </ul>
+</nav>
+
+<div class="container">
+  <form method="POST" th:action="newUser" modelAttribute="user" style="margin-top:80px">
+    <label for="type">User Type</label><br>
+    <select id="type" name="type">
+      <option th:each="userType: ${userTypes}" th:value="${userType}" th:text="${userType}">
+      </option>
+    </select>
+    <br>
+
+    <div class="form-group">
+      <label for="email">Email</label><br>
+      <input type="email" class="form-control" id="email" placeholder="Enter Email" name="email"/>
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <br>
+    <div class="form-group">
+      <label for="username">username</label><br>
+      <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username"/><br>
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+    <br>
+    <div class="form-group">
+      <label for="password">password</label><br>
+      <input type="password" class="form-group" id="password" placeholder="Enter Password" name="password"/><br><br>
+      <div class="valid-feedback">Valid.</div>
+      <div class="invalid-feedback">Please fill out this field.</div>
+    </div>
+      <input type="submit" class="btn btn-primary" value="save"/>
+  </form>
+</div>
+</body>
+</html>
+

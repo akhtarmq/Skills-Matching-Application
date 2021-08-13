@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+</style>
+
+    <link href="https://unpkg.com/tabulator-tables@4.9.3/dist/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.10.3/typeahead.bundle.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        let exampleTable = null;
+
+        $(document).ready(function() {
+		    $("#addQuestionBtn").on('click', function () {
+                //appendNewQuestion();
+            });
+
+            $("#qText").on("input", function() {
+                //only check qText if length greater than 2
+                if($("#qText").val().length > 2) {
+                    $.ajax({
+                        url : "/questionsLike",
+                        data : {qText: $("#qText").val(), jobSpecId: $("#jobSpecID").val() },
+                        success : function(result) {
+                            //$("#addUserBtn").prop('disabled', result);
+                            //alert(result);
+                            exampleTable = new Tabulator("#example-table", {
+                                data:result, //assign data to table
+                                autoColumns:true, //create columns from data field names
+                                selectable:1,
+                                rowSelectionChanged:function(data, rows){
+                                    if(rows && rows.length > 0) {
+                                        $('#addExistingQuestionsBtn').prop('disabled', false);
+                                    } else {
+                                        $('#addExistingQuestionsBtn').prop('disabled', true);
+                                    }
+                                },
+                            });
+                            exampleTable.deleteColumn("options");
+
+                            //code to show error message
+                            if(!result) {
+                                //$("#userNotExistError").text("Username does not exist")
+                            }
+                            else {
+                                //$("#userNotExistError").text("")
+                            }
+                        }
+                    });
+                }
+            });
+	    });
+
+	    function appendNewQuestion() {
+          var txt1 = "<p>Text.</p>";               // Create element with HTML
+          var txt2 = $("<p></p>").text("Text.");   // Create with jQuery
+          var txt3 = document.createElement("p");  // Create with DOM
+          txt3.innerHTML = "Text.";
+
+          var lbl = "<label>questionText</label><br>";
+          var inp = "<input type=\"text\" name=\"jobSpecID\"/><br>";
+          var btn = "<button value=\"removeQuestion\">Remove Question</button><br><br>";
+          $("#qsDiv").append(lbl, inp, btn);      // Append the new elements
+        }
+
+
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-light navbar-secondary fixed-top">
+    <ul class="navbar-nav nav nav-pills" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" href="/hm" >Current Jobs</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/newJobSpec" class="nav-link" >New Job Spec</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/logout" class="nav-link" >Logout</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container" style="margin-top:80px">
+    <div class="form-group">
+        <label for="jobSpecID">Job Spec ID</label><br>
+        <input type="text" class="form-control" id="jobSpecID" name="jobSpecID" th:value="${jobSpec.jobSpecID}" disabled="true"/><br>
+    </div>
+
+    <div class="form-group">
+        <label for="jobSpecName">job Spec Name</label><br>
+        <input type="text" class="form-control" id="jobSpecName" name="jobSpecName" th:value="${jobSpec.jobSpecName}" disabled="true"/><br>
+    </div>
+
+    <div class="form-group">
+        <label for="jobDescription">Job Spec</label><br>
+        <textarea type="text" class="form-control" id="jobDescription" name="jobDescription" rows="4" cols="2000" th:text="${jobSpec.jobDescription}" disabled="true">
+        </textarea><br>
+    </div>
+
+    <div class="form-group">
+        <label for="closingDate">Closing Date</label><br>
+        <input type="date" class="form-control" id="closingDate" name="closingDate" th:value="${jobSpec.closingDate}" disabled="true"><br>
+    </div>
+</div>
+
+
+<div id="qsDiv" th:each="jSpecQ: ${jobSpec.questions}">
+    <div class="form-group">
+        <label>Question Type</label><br>
+        <input type="text" class="form-control" name="questionType" th:value="${jSpecQ.question.questionType}"  disabled="true">
+    </div>
+    <div class="form-group">
+    <label>Question Text</label><br>
+        <textarea type="text" style="max-width: 100%; "  class="form-control" name="questionText" th:text="${jSpecQ.question.questionText}"  rows="4" cols="2000" disabled="true">
+        </textarea><br>
+    </div>
+
+    <div class="form-group">
+        <a th:href="@{/jobSpec/{id}/removeQuestion/{qId}(id=${jobSpec.jobSpecID},qId=${jSpecQ.question.questionID})}">Remove Question</a>
+    </div>
+</div>
+
+<button id="addQuestionBtn" class="btn btn-primary">Add Question</button>
+<button id="showExistingQuestionBtn" class="btn btn-primary">Add Existing Question</button>
+
+
+
+
+<div id="newQuestionModal" class="modal" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <div class="modal-body">
+            <span class="close">&times;</span>
+
+            <form id="newQuestionModalForm" style="margin-bottom: 50px" method="POST" th:action="@{/jobSpec/{id}/saveNewQuestion(id=${jobSpec.jobSpecID})}" modelAttribute="question">
+                <div class="form-group">
+                    <label>questionType</label><br>
+                    <select id="questionTypeId" name="questionType">
+                        <option id="newQuestionType" th:each="questionType: ${questionTypes}" th:value="${questionType}" th:text="${questionType}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Question Text</label><br>
+                    <textarea id="questionTextId" style="max-width: 95%; " type="text" name="questionText" rows="4" cols="2000">
+                    Question Text
+                    </textarea>
+                </div>
+                <br>
+                <!--
+                <fieldset id="responseList">
+                    <legend>Responses</legend>
+                    <ol id='responseListScale'></ol>
+                    <div id='responseListSingleSelect'></div>
+                </fieldset>
+                -->
+                <div name="options" id="app">
+                    <!-- VueJs app will mounted here-->
+                    <div class="form-group" v-for="(input,k) in inputs" :key="k">
+                        <input type="text" name="optionText" class="form-control" v-model="input.name">
+                        <input type="range" name="weighting" class="form-control" v-model="input.range">
+                        <span>
+                            <i class="fas fa-minus-circle" @click="remove(k)" v-show="k || ( !k && inputs.length > 1)"></i>
+                            <i class="fas fa-plus-circle" @click="add(k)" v-show="k == inputs.length-1"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!--
+                <input type='text' id = 'newResponse' />
+                <input type='button' value='add response' id='addResponseBtn' />
+                -->
+
+                <br>
+                <input type="submit" class="button btn-primary" value="save"/>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="addQuestionModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+
+        <span class="close">&times;</span>
+
+        <label for="qText">Question Text Like:</label>
+        <input id="qText" type="text" name="qText"/><br>
+
+        <!--
+        <button id="newQuestionBtn" style="float: right;">new Question</button>
+        -->
+
+        <br>
+        <div id="example-table"></div>
+        <br>
+
+        <form action="/addQuestion" method="POST">
+            <input type="hidden" id="existingQuestionId" name="questionId">
+            <input type="hidden" id="addTojobSpecId" name="jobSpecId" th:value="${jobSpec.jobSpecID}">
+            <input type="submit" id="addExistingQuestionsBtn" disabled="true" name="addExistingQuestionsBtn" value="Add">
+        </form>
+    </div>
+
+</div>
+
+<script>
+var app = new Vue({
+            el: "#app",
+            data: {
+                inputs: [
+                    {
+                        name: '',
+                        range: ''
+                    }
+                ]
+            },
+            methods: {
+                add(index){
+                    this.inputs.push({name: '', range: ''});
+                },
+                remove(index){
+                    this.inputs.splice(index, 1);
+                }
+            }
+        });
+
+/*
+//Defining a listener for our button, specifically, an onclick handler
+document.getElementById("addResponseBtn").onclick = function() {
+    //First things first, we need our text:
+    var text = document.getElementById("newResponse").value; //.value gets input values
+
+    var newQuestionType = $('#newQuestionType').val()
+
+    if(newQuestionType === 'SCALE')
+    {
+        //Now construct a quick list element
+        var li = "<li>" + text + "</li>";
+
+        //Now use appendChild and add it to the list!
+        $('#responseListScale').append(li);
+    }
+    else if(newQuestionType === 'SINGLE_SELECT')
+    {
+        //Now construct a quick list element
+        var inp = '<input type="radio" name="response" value="' + text + '">' + text + "</input>";
+
+        //Now use appendChild and add it to the list!
+        $('#responseListSingleSelect').append(inp);
+    }
+}
+*/
+
+// Get the modal
+var modalAdd = document.getElementById("addQuestionModal");
+var modalNew = document.getElementById("newQuestionModal");
+
+// Get the button that opens the modal
+var btnAdd = document.getElementById("addQuestionBtn");
+var btnShowExistingQuestions = document.getElementById("showExistingQuestionBtn");
+//var btnNew = document.getElementById("newQuestionBtn");
+var btnAddExisting = document.getElementById("addExistingQuestionsBtn");
+
+// Get the <span> element that closes the modal
+var span1 = document.getElementsByClassName("close")[0];
+var span2 = document.getElementsByClassName("close")[1];
+
+// When the user clicks the button, open the modal
+btnAdd.onclick = function() {
+  modalNew.style.display = "block";
+}
+
+btnShowExistingQuestions.onclick = function() {
+  modalAdd.style.display = "block";
+}
+
+//btnNew.onclick = function() {
+//  modalAdd.style.display = "none";
+//  modalNew.style.display = "block";
+//  $("#example-table").empty();
+//}
+
+$('#addExistingQuestionsBtn').click(function(){
+    //TODO only do if sth selected
+    var existingQuestionId = exampleTable.getSelectedData()[0].questionID;
+    $('#existingQuestionId').val(existingQuestionId);
+});
+
+/*
+btnAddExisting.onclick = function() {
+//TODO - only if sth selected
+   $.ajax({
+        url : "/addQuestion",
+        data : {questionId: exampleTable.getSelectedData()[0].questionID, jobSpecId: $("#jobSpecID").val() },
+        success : function(result) {
+            //TODO add create input mask so cannot repeat operation
+            //TODO add popup to show success
+
+            modalAdd.style.display = "none";
+            modalNew.style.display = "none";
+            var selectedData = exampleTable.getSelectedData();
+            $("#example-table").empty();
+
+            //code to show error message
+            if(!result) {
+                //$("#userNotExistError").text("Username does not exist")
+            }
+            else {
+                //$("#userNotExistError").text("")
+            }
+        }
+    });
+}
+*/
+
+// When the user clicks on <span> (x), close the modal
+span1.onclick = function() {
+  modalAdd.style.display = "none";
+  modalNew.style.display = "none";
+  $("#example-table").empty();
+}
+
+span2.onclick = function() {
+  modalAdd.style.display = "none";
+  modalNew.style.display = "none";
+  $("#example-table").empty();
+}
+
+// When the user clicks anywhere outside of the modal, close it
+//window.onclick = function(event) {
+//  if (event.target == modal) {
+//    modalAdd.style.display = "none";
+//  }
+//}
+
+$("#newQuestionModalForm").submit(function(e){
+    var form = $(this);
+    var optionsData = "";
+
+    $('#app div').each(function(i, obj) {
+        optionsData += "{" ;
+       $(obj).find('input').each(function(i, obj2) {
+           optionsData += JSON.stringify(obj2.name);
+           optionsData += ":" ;
+           optionsData += JSON.stringify(obj2.value);
+          // if(i < 1) {
+             optionsData += ",";
+          // }
+        });
+        optionsData += '"id":{"sortSequence":' + i + '}';
+        optionsData += "}," ;
+    });
+
+    if(optionsData[optionsData.length-1] === ',') {
+        optionsData = optionsData.substring(0, optionsData.length-1);
+    }
+
+    $.ajax({
+          type: 'POST',
+         url   : form.attr('action'),
+         //type  : form.attr('method'),
+         data  : '{' +
+                 '"questionType":"' + $('#questionTypeId').val() + '",' +
+                 '"questionText":' + JSON.stringify($('#questionTextId').val()) + ',' +
+                 '"options": [' + optionsData + ']' +
+                 '}',
+                 contentType: 'application/json',
+          dataType: 'json',
+         success: function(response){
+            window.location.href = window.location.href;
+         },
+         error:  function(response){
+            window.location.href = window.location.href;
+         }
+    });
+    var modalAdd = document.getElementById("addQuestionModal");
+    var modalNew = document.getElementById("newQuestionModal");
+    modalAdd.style.display = "none";
+    modalNew.style.display = "none";
+    if($("#example-table")) {
+        $("#example-table").empty();
+    }
+    return false;
+ });
+</script>
+<script src="jquery.duplicate.js"></script>
+
+</body>
+</html>

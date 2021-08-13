@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Spec</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-sm bg-light navbar-secondary fixed-top">
+    <ul class="navbar-nav nav nav-pills" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" href="/hm" >Current Jobs</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/newJobSpec" class="nav-link active" >New Job Spec</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/logout" class="nav-link" >Logout</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="container">
+    <form method="POST" th:action="newJobSpec" modelAttribute="jobSpec" style="margin-top:80px">
+        <div class="form-group">
+            <label for="jobSpecName">Job Spec Name</label><br>
+            <input type="text" class="form-control" id="jobSpecName" name="jobSpecName" value="Please Enter Job Spec Name"><br>
+        </div>
+
+        <div class="form-group">
+            <label for="jobDescription">Job Spec</label><br>
+            <textarea type="text" class="form-control" id="jobDescription" name="jobDescription" rows="4" cols="2000">
+            Please enter job spec details here.
+            </textarea><br>
+        </div>
+
+        <div class="form-group">
+            <label for="closingDate">Closing Date</label><br>
+            <input type="date" class="form-control" id="closingDate" name="closingDate"><br>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="save"/>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

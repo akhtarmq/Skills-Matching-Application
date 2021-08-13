@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Candidate</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-light navbar-secondary fixed-top">
+
+    <ul class="navbar-nav nav nav-pills" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" href="/candidate">New Questions</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/answeredQuestions">Answered Questions</a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/jobsSelectedFor" class="nav-link">Jobs match</a>
+        </li>
+
+        <li class="nav-item"></li>
+        <a href="/logout" class="nav-link">Log Out</a>
+    </ul>
+</nav>
+
+<div class="container">
+    <div id="qsDiv" th:each="question: ${unansweredQuestions}" style="margin-top:80px">
+        <!--
+        <label>questionType</label>
+        <input type="text" class="form-control" name="questionType" th:value="${question.questionType}" disabled="true"><br>
+        -->
+        <label>QuestionText</label><br>
+        <textarea type="text" class="form-control" name="questionText" th:text="${question.questionText}"  rows="4" cols="50" disabled="true">
+        </textarea><br>
+        <form method="POST" th:action="candidateResponse" ><!--modelAttribute="candidateResponse">-->
+            <div class="form-group">
+                <label>Answer:</label><br>
+                <input type="text" class="form-control" name="questionID" th:value="${question.questionID}" hidden="true">
+            </div>
+            <div class="form-group">
+                <label th:if="${question.questionType.name() == 'YES_NO'}">
+                    <select type="checkbox" name="responseNum">
+                        <option value="0" selected="selected">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </label><br>
+                <label th:if="${question.questionType.name() == 'SCALE'}">
+                    <input type="range" th:max="${question.options.size()}" class="form-control" name="responseNum">
+                </label><br>
+                <label th:if="${question.questionType.name() == 'SINGLE_SELECT'}">
+                    <select type="checkbox" name="responseNum">
+                        <option th:each="option: ${question.options}" th:value="${option.id.sortSequence}" th:text="${option.optionText}"></option>
+                    </select>
+                </label><br>
+            </div>
+            <input type="submit" class="btn btn-secondary" value="save"/><br><br><br>
+        </form>
+    </div>
+</div>
+<button type="button" class="btn btn-primary">Search for new Questions</button>
+
+</body>
+</html>
